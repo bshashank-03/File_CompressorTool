@@ -12,7 +12,27 @@ unordered_map<char, int> countChars_freq(string& file_name){
     file.open(file_name, ios:: in); 
     // On the above-created object, we have to apply the open() function to create a new file, 
     // and the mode is set to ‘in’ which will allow us to read from the file.
-    
+
+    if(!file){ 
+        cout << "Check File Name";
+        return charcount;
+    }
+
+    while(file){
+
+        string line;
+        getline(file, line);
+
+        for(char ch: line){
+            if(charcount.find(ch) == charcount.end()){
+                charcount[ch]=1;
+            } 
+            else{
+                charcount[ch]++;
+            }
+        }
+    }
+    return charcount;
 }
 
 int main(){
