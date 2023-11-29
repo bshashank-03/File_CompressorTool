@@ -96,6 +96,7 @@ int main(){
         vector<int> char_freq = buildfreq(result);
 
         // Step 3 : Sort the above two data with Min Heap
+        priority_queue<Node> minHeap = buildMinHeap(uniqueChar, char_freq);
     }
 
 }
