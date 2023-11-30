@@ -4,6 +4,38 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+/*------------------------------------------- STEP - 3 -----------------------------------------------*/
+
+// Node Structure 
+struct Node{
+    char character;
+    int frequency;
+    struct Node* left, *right;
+
+    Node(char c, int f): character(c), frequency(f), left(nullptr), right(nullptr){}
+
+    // overloading the < operator for Min Heap
+    bool operator<(const Node&next)const {
+        return frequency > next.frequency;
+    }
+};
+
+// Function to build min-heap with data given
+// chr[] - array of unique characters
+// freq[] - array of frequencies of unique characters
+
+ priority_queue<Node> buildMinHeap(vector<char>& chr, vector<int>& freq){
+    priority_queue<Node> minHeap;
+    for(int i=0; i < chr.size(); ++i){
+        Node* node = new Node(chr[i], freq[i]);
+        minHeap.push(*node);
+    }
+
+    return minHeap;
+}
+
+/*------------------------------------------ END ------------------------------------------------------*/
+
 /*------------------------------------------- STEP - 2 -----------------------------------------------*/
 
 // Function to extract unique characters and store in a character array
