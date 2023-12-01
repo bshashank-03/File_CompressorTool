@@ -12,12 +12,19 @@ struct Node{
     int frequency;
     struct Node* left, *right;
 
+    // This line is the constructor of the Node structure and 
+    // it's using a member initializer list to initialize the member variables of the structure. 
     Node(char c, int f): character(c), frequency(f), left(nullptr), right(nullptr){}
+
+
 
     // overloading the < operator for Min Heap
     bool operator<(const Node&next)const {
         return frequency > next.frequency;
     }
+    // (const Node &other) is specifying that the less than operator (operator<) takes a constant reference 
+    // to another Node object (other). This ensures that the function doesn't modify the other object.
+
 };
 
 // Function to build min-heap with data given
@@ -35,6 +42,22 @@ struct Node{
 }
 
 /*------------------------------------------ END ------------------------------------------------------*/
+
+// Function to build Huffman tree
+Node* buildHuffman(priority_queue<Node>& minHeap){
+    while(minHeap.size() > 1){
+        Node* left = new Node(minHeap.top());
+        minHeap.pop();
+        Node* right = new Node(minHeap.top());
+        minHeap.pop();
+
+        Node* mergedNode = new Node('$', left->frequency + right->frequency);
+        mergedNode->left = left;
+        mergedNode->right = right;
+        minHeap.push(*mergedNode);
+    }
+    return new Node(minHeap.top());
+}
 
 /*------------------------------------------- STEP - 2 -----------------------------------------------*/
 
@@ -129,6 +152,9 @@ int main(){
 
         // Step 3 : Sort the above two data with Min Heap
         priority_queue<Node> minHeap = buildMinHeap(uniqueChar, char_freq);
+
+        // Step 4 : Build Huffman tree from MinHeap
+         buildHuffman(minHeap);
     }
 
 }
