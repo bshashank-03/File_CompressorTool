@@ -103,6 +103,21 @@ void compressor(string f_name, const std::string& outputFileName){
     // Write the separator between the huffman codes and encoded text
     outFile.put('\n');
 
+    // Write the encoded text using bit manipulation
+    string encodedBits;
+    string text;
+    while(inp_file){
+        getline(inp_file, text);
+        for(char ch: text){
+            encodedBits+= H_codes.at(ch);
+        }
+    }
+
+    // Calculate the padding(Number of bits to be added)
+    size_t padding = 8 - (encodedBits.length() % 8);
+    encodedBits += std::string(padding, '0'); // pad with zeroes
+    
+
     
 }
 /*------------------------------------------- STEP - 2 -----------------------------------------------*/
