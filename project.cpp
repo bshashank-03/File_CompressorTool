@@ -78,6 +78,31 @@ unordered_map<char, string> HuffmanCodes(Node* root, string code=""){
 
 // Function to substite the Huffman Codes(Compressor)
 void compressor(string f_name, const std::string& outputFileName){
+
+    fstream inp_file;
+    inp_file.open(f_name, ios::in);
+
+    std::ofstream outFile(outputFileName, std::ios::binary);
+    if(!outFile.is_open()){
+        std::cerr<< "Error opening output file!"<<std::endl;
+        return;
+    }
+
+    // Write the size of the Huffman codes map to the output file
+    size_t huffmanCodesSize = H_codes.size(); // size_t is an unsigned integer data type
+    // which is used to represent the size of objects in bytes 
+    outFile.write(reinterpret_cast<const char*>(&huffmanCodesSize), sizeof(size_t));
+
+    // write the huffman code to the output file
+    for(const auto&start: H_codes){
+        outFile.put(start.first); //Write the character
+        outFile.put(start.second.length()); // Write the Code length
+        outFile <<start.second; //Write the code
+    }
+
+    // Write the separator between the huffman codes and encoded text
+    outFile.put('\n');
+
     
 }
 /*------------------------------------------- STEP - 2 -----------------------------------------------*/
