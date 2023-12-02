@@ -59,6 +59,27 @@ Node* buildHuffman(priority_queue<Node>& minHeap){
     return new Node(minHeap.top());
 }
 
+
+// Function to prnt Huffman Codes
+unordered_map<char, string> H_codes;
+unordered_map<char, string> HuffmanCodes(Node* root, string code=""){
+    if(root == nullptr){
+        return H_codes;
+    }
+
+    if(root->character!='$'){
+        H_codes[root->character]= code;
+    }
+
+    HuffmanCodes(root->left,code+"0");
+    HuffmanCodes(root->right,code+"1");
+    return H_codes;
+}
+
+// Function to substite the Huffman Codes(Compressor)
+void compressor(string f_name, const std::string& outputFileName){
+    
+}
 /*------------------------------------------- STEP - 2 -----------------------------------------------*/
 
 // Function to extract unique characters and store in a character array
@@ -74,7 +95,7 @@ vector<char> buildchar(unordered_map<char, int>& map){
 
 // Function to store frequency of unique character in an array
 vector<int> buildfreq(unordered_map<char, int>& map){
-    vector<char> char_freq;
+    vector<int> char_freq;
 
     for(auto pair: map){
         char_freq.push_back(pair.second);
@@ -154,7 +175,17 @@ int main(){
         priority_queue<Node> minHeap = buildMinHeap(uniqueChar, char_freq);
 
         // Step 4 : Build Huffman tree from MinHeap
-         buildHuffman(minHeap);
+         Node* root = buildHuffman(minHeap);
+
+        // Step 5 : Generate Huffman Codes
+        unordered_map<char, string> codes= HuffmanCodes(root, "");
+
+        for(const auto&it: codes){
+            cout<<it.first<<" "<<it.second<<endl;
+        }
+
+        // Step 6 : Substitute Huffman codes(Compressor)
+        compressor(F_name, "output.txt");
     }
 
 }
