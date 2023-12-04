@@ -116,9 +116,22 @@ void compressor(string f_name, const std::string& outputFileName){
     // Calculate the padding(Number of bits to be added)
     size_t padding = 8 - (encodedBits.length() % 8);
     encodedBits += std::string(padding, '0'); // pad with zeroes
-    
 
-    
+    // Write the size of encoded bits to the output file
+    size_t encodedBitssize = encodedBits.size();
+    outFile.write(reinterpret_cast<const char*>(&encodedBitssize), sizeof(size_t));
+
+    // Write the encoded text to the output file using bytes
+    for(size_t i=0;i < encodedBitssize;i+=8){
+        std::bitset<8> bits(encodedBits.substr(i,8));
+        outFile.put(bits.to_ullong());
+    }
+
+    // Close the output file
+    outFile.close();
+
+    std::cout<<"File Compressed Successfully"<<std::endl;
+ 
 }
 /*------------------------------------------- STEP - 2 -----------------------------------------------*/
 
