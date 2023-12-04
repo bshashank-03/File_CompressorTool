@@ -133,6 +133,83 @@ void compressor(string f_name, const std::string& outputFileName){
     std::cout<<"File Compressed Successfully"<<std::endl;
  
 }
+
+// Function to decompress the text file
+void decompressor(string &inputFileName){
+    
+    //  open the input file for reading
+    // ifstream module for input file Handling
+    std::ifstream inputFile(inputFileName, std::ios::binary);
+    
+    // Checking existence of the file
+    if(!inputFile.is_open()){
+        std::cerr<<"Error opening input file"<<std::endl;
+        return;
+    }
+
+    // Read the size of the Huffman codes map from the input file
+    size_t huffmanCodesSize;
+    inputFile.read(reinterpret_cast<char*>(&huffmanCodesSize), sizeof(size_t));
+
+    // Read the Huffman codes from the input file
+    std::unordered_map<char, std::string> huffmanCodes;
+    for (size_t i = 0; i < huffmanCodesSize; ++i) {
+        char character;
+        inputFile.get(character);
+
+        char codeLength;
+        inputFile.get(codeLength);
+
+        std::string code;
+        for (int j = 0; j < codeLength; ++j) {
+            code += inputFile.get();
+        }
+
+        huffmanCodes[character] = code;
+    }
+
+    // Read the separator between Huffman codes and encoded text
+    inputFile.get();
+
+    // Read the size of the encoded text from the input file
+    size_t encodedBitsSize;
+    inputFile.read(reinterpret_cast<char*>(&encodedBitsSize), sizeof(size_t));
+
+    // Read the encoded text from the input file using bytes
+    std::string encodedBits;
+    char byte;
+    while (inputFile.get(byte)) {
+        encodedBits += std::bitset<8>(byte).to_string();
+    }
+
+    // Truncate to the actual size
+    encodedBits.resize(encodedBitsSize);
+
+    // Close the input file
+    inputFile.close();
+
+     // Decode the text
+    std::string decodedText;
+    std::string currentCode;
+
+    for (char bit : encodedBits) {
+        currentCode += bit;
+         for (const auto& entry : huffmanCodes) {
+            if (entry.second == currentCode) {
+                decodedText += entry.first;
+                currentCode.clear();
+                break;
+            }
+        }
+     }
+     
+    fstream out_file;
+    out_file.open("decompressed.txt",ios::out);
+    out_file<<decodedText;
+    cout << "File decompressed successfully." <<endl;
+
+}
+
 /*------------------------------------------- STEP - 2 -----------------------------------------------*/
 
 // Function to extract unique characters and store in a character array
@@ -199,6 +276,7 @@ unordered_map<char, int> countChars_freq(string& file_name){
 int main(){
     int ch;
     string F_name;
+    string file;
 
     cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x"<< endl;
     cout << "|                             |"<< endl;
@@ -239,6 +317,16 @@ int main(){
 
         // Step 6 : Substitute Huffman codes(Compressor)
         compressor(F_name, "output.txt");
+    }
+
+    if(ch == 2){
+        cout<<"Enter File name: ";
+        cin>>file;
+        cout<<"Decompressing the file....."<<endl;
+
+        // Step 7 : Decompress
+        decompressor(file);
+
     }
 
 }
