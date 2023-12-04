@@ -1,3 +1,4 @@
+// Project Title: File Compressor
 // Author: Shashank 
 
 
@@ -202,7 +203,7 @@ void decompressor(string &inputFileName){
             }
         }
      }
-     
+
     fstream out_file;
     out_file.open("decompressed.txt",ios::out);
     out_file<<decodedText;
